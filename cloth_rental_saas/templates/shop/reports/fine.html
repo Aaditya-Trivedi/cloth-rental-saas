@@ -1,0 +1,23 @@
+{% extends "layout/base.html" %}
+{% block title %}Fine Report{% endblock %}
+
+{% block content %}
+<h4>Fine Collection</h4>
+
+<p><strong>Total Fine Collected:</strong> ₹{{ total }}</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Cloth</th>
+        <th>Customer</th>
+        <th>Fine</th>
+    </tr>
+    {% for r in rentals %}
+    <tr>
+        <td>{{ r.cloth.cloth_code }}</td>
+        <td>{{ r.customer.name }}</td>
+        <td>₹{{ r.fine_amount }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

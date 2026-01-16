@@ -6,4 +6,10 @@
 <p>Welcome, {{ user.username }}</p>
 <a href="{% url 'rent' %}" class="btn btn-primary">Rent Cloth</a>
 <a href="{% url 'return' %}" class="btn btn-warning ms-2">Return Cloth</a>
+
+<h5>Reports</h5>
+<a href="{% url 'inventory_report' %}" class="btn btn-outline-primary">Inventory</a>
+<a href="{% url 'rented_report' %}" class="btn btn-outline-secondary">Rented</a>
+<a href="{% url 'overdue_report' %}" class="btn btn-outline-danger">Overdue</a>
+<a href="{% url 'fine_report' %}" class="btn btn-outline-success">Fine</a>
 {% endblock %}

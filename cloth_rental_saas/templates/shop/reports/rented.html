@@ -1,0 +1,23 @@
+{% extends "layout/base.html" %}
+{% block title %}Rented Cloths{% endblock %}
+
+{% block content %}
+<h4>Currently Rented Cloths</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Cloth</th>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Return Date</th>
+    </tr>
+    {% for r in rentals %}
+    <tr>
+        <td>{{ r.cloth.cloth_code }}</td>
+        <td>{{ r.customer.name }}</td>
+        <td>{{ r.customer.phone }}</td>
+        <td>{{ r.expected_return_date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

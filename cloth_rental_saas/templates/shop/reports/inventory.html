@@ -1,0 +1,29 @@
+{% extends "layout/base.html" %}
+{% block title %}Inventory Report{% endblock %}
+
+{% block content %}
+<h4>Inventory Status</h4>
+
+<table class="table table-bordered table-striped">
+    <tr>
+        <th>Cloth Code</th>
+        <th>Category</th>
+        <th>Rent Price</th>
+        <th>Status</th>
+    </tr>
+    {% for c in cloths %}
+    <tr>
+        <td>{{ c.cloth_code }}</td>
+        <td>{{ c.category.name }}</td>
+        <td>₹{{ c.rent_price }}</td>
+        <td>
+            {% if c.is_available %}
+                <span class="badge bg-success">Available</span>
+            {% else %}
+                <span class="badge bg-danger">Rented</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

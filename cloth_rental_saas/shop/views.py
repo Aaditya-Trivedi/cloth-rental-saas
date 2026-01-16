@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from datetime import date
 from .models import Cloth, Customer, Rental
+from django.db.models import Sum
 
 @login_required
 def dashboard(request):
@@ -78,3 +79,32 @@ def return_cloth(request):
         message = f"Cloth returned successfully. Fine: ₹{rental.fine_amount}"
 
     return render(request, "shop/return.html", {"message": message})
+
+@login_required
+def inventory_report(request):
+    cloths = Cloth.objects.using("shop_1").all()
+    return render(request, "shop/reports/inventory.html", {"cloths": cloths})
+
+@login_required
+def rented_report(request):
+    rentals = Rental.objects.using("shop_1").filter(status="RENTED")
+    return render(request, "shop/reports/rented.html", {"rentals": rentals})
+
+@login_required
+def overdue_report(request):
+    rentals = Rental.objects.using("shop_1").filter(status="OVERDUE")
+    return render(request, "shop/reports/overdue.html", {"rentals": rentals})
+
+@login_required
+def fine_report(request):
+    total_fine = Rental.objects.using("shop_1").aggregate(
+        total=Sum("fine_amount")
+    )["total"] or 0
+
+    rentals = Rental.objects.using("shop_1").filter(fine_amount__gt=0)
+
+    return render(
+        request,
+        "shop/reports/fine.html",
+        {"rentals": rentals, "total": total_fine},
+    )
