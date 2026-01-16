@@ -79,9 +79,11 @@ WSGI_APPLICATION = 'cloth_rental_saas.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'master_db.sqlite3',
     }
 }
+
+DATABASE_ROUTERS = ['cloth_rental_saas.db_router.ShopDatabaseRouter']
 
 
 # Password validation
