@@ -1,0 +1,51 @@
+{% extends "layout/base.html" %}
+{% block title %}Add Shop{% endblock %}
+
+{% block content %}
+<h3>Add New Shop</h3>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label>Shop Name</label>
+        <input type="text" name="shop_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Owner Name</label>
+        <input type="text" name="owner_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Email (Username)</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label>Subscription Plan</label>
+        <select name="plan" class="form-control" required>
+            {% for p in plans %}
+            <option value="{{ p.id }}">
+                {{ p.name }} - ₹{{ p.price }} ({{ p.duration_days }} days)
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button class="btn btn-primary">Create Shop</button>
+</form>
+
+{% if error %}
+<div class="alert alert-danger mt-3">
+    {{ error }}
+</div>
+{% endif %}
+
+{% if message %}
+<div class="alert alert-success mt-3" style="white-space: pre-line;">
+    {{ message }}
+</div>
+{% endif %}
+
+{% endblock %}

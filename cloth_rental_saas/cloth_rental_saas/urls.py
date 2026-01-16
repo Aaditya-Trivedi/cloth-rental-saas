@@ -27,6 +27,8 @@ urlpatterns = [
 
     # Shop module (dashboard, rent, return, etc.)
     path('', include('shop.urls')),
+    #Master (platform Owner)
+    path("", include("master.urls")),
 ]
 
 # Media files (barcode images)

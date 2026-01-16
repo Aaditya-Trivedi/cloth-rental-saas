@@ -1,24 +1,30 @@
 {% extends "layout/base.html" %}
+{% block title %}Shops{% endblock %}
+
 {% block content %}
 <h4>Registered Shops</h4>
 
 <table class="table table-bordered">
 <tr>
-    <th>Shop</th><th>Owner</th><th>Status</th><th>Action</th>
+    <th>Shop</th>
+    <th>Owner</th>
+    <th>Status</th>
+    <th>Action</th>
 </tr>
+
 {% for s in shops %}
 <tr>
     <td>{{ s.shop_name }}</td>
     <td>{{ s.owner_name }}</td>
     <td>
         {% if s.is_active %}
-        <span class="badge bg-success">Active</span>
+            <span class="badge bg-success">Active</span>
         {% else %}
-        <span class="badge bg-danger">Inactive</span>
+            <span class="badge bg-danger">Inactive</span>
         {% endif %}
     </td>
     <td>
-        <form method="post" action="{% url 'toggle_shop' s.id %}" style="display:inline;">
+        <form method="post" action="{% url 'toggle_shop' s.id %}">
             {% csrf_token %}
             <button class="btn btn-sm btn-warning">Toggle</button>
         </form>

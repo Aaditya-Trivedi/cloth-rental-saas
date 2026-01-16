@@ -28,7 +28,7 @@ def login_view(request):
                 ip_address=ip,
                 status="FAILED"
             )
-            send_login_alert(user_obj.email, "ACCOUNT LOCKED")
+            login_alert(user_obj.email, "ACCOUNT LOCKED")
             message = "Account is locked due to multiple failed attempts"
             return render(request, "auth/login.html", {"message": message})
 
@@ -50,7 +50,10 @@ def login_view(request):
 
             login_alert(user.email, "SUCCESSFUL LOGIN")
 
-            return redirect("dashboard")
+            if user.is_superuser:
+                return redirect("admin_dashboard")
+            else:
+                return redirect("dashboard")
 
         # ❌ Failed login
         attempt.failed_attempts += 1
