@@ -1,0 +1,12 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<h3>Platform Owner Dashboard</h3>
+
+<div class="row">
+    <div class="col-md-4 alert alert-primary">Total Shops: {{ total_shops }}</div>
+    <div class="col-md-4 alert alert-success">Active Shops: {{ active_shops }}</div>
+    <div class="col-md-4 alert alert-warning">Revenue: ₹{{ revenue }}</div>
+</div>
+
+<a href="{% url 'admin_shops' %}" class="btn btn-dark">Manage Shops</a>
+{% endblock %}
