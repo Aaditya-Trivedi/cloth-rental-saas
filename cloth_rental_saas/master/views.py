@@ -3,7 +3,14 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.text import slugify
+from datetime import timedelta
+from django.utils.crypto import get_random_string
+
 from .models import ShopRegistry, Subscription, SubscriptionPlan
+from .utils import create_shop_database
+
 
 def is_superadmin(user):
     return user.is_superuser
@@ -44,52 +51,70 @@ def toggle_shop(request, shop_id):
 def add_shop(request):
     plans = SubscriptionPlan.objects.all()
     message = None
+    error = None
 
     if request.method == "POST":
-        shop_name = request.POST.get("shop_name")
-        owner_name = request.POST.get("owner_name")
-        email = request.POST.get("email")
-        plan_id = request.POST.get("plan")
+        try:
+            shop_name = request.POST.get("shop_name")
+            owner_name = request.POST.get("owner_name")
+            email = request.POST.get("email")
+            plan_id = request.POST.get("plan")
 
-        # 1️⃣ Create unique DB name
-        db_name = f"shop_{ShopRegistry.objects.count() + 1}"
+            # ✅ 1. CREATE SAFE, MEANINGFUL DB NAME
+            shop_slug = slugify(shop_name)
+            owner_slug = slugify(owner_name)
+            timestamp = int(timezone.now().timestamp())
 
-        # 2️⃣ Create shop registry entry
-        shop = ShopRegistry.objects.create(
-            shop_name=shop_name,
-            owner_name=owner_name,
-            email=email,
-            db_name=db_name
-        )
+            db_name = f"{shop_slug}_{owner_slug}_{timestamp}"
 
-        # 3️⃣ Create subscription
-        plan = SubscriptionPlan.objects.get(id=plan_id)
-        start_date = timezone.now().date()
-        end_date = start_date + timedelta(days=plan.duration_days)
+            # ✅ 2. CREATE SHOP REGISTRY
+            shop = ShopRegistry.objects.create(
+                shop_name=shop_name,
+                owner_name=owner_name,
+                email=email,
+                db_name=db_name
+            )
 
-        Subscription.objects.create(
-            shop=shop,
-            plan=plan,
-            start_date=start_date,
-            end_date=end_date,
-            amount_paid=plan.price
-        )
+            # ✅ 3. CREATE SUBSCRIPTION
+            plan = SubscriptionPlan.objects.get(id=plan_id)
+            start_date = timezone.now().date()
+            end_date = start_date + timedelta(days=plan.duration_days)
 
-        # 4️⃣ Create shop database + tables
-        create_shop_database(db_name)
+            Subscription.objects.create(
+                shop=shop,
+                plan=plan,
+                start_date=start_date,
+                end_date=end_date,
+                amount_paid=plan.price
+            )
 
-        # 5️⃣ Create login user for shop
-        password = User.objects.make_random_password()
-        User.objects.create_user(
-            username=email,
-            email=email,
-            password=password
-        )
+            # ✅ 4. CREATE SHOP DATABASE + MIGRATE
+            create_shop_database(db_name)
 
-        message = f"Shop created successfully. Login password: {password}"
+            # ✅ 5. CREATE SHOP LOGIN USER
+            password = get_random_string(10)
+            User.objects.create_user(
+                username=email,
+                email=email,
+                password=password
+            )
+
+            message = (
+                f"Shop created successfully.\n\n"
+                f"Username: {email}\n"
+                f"Password: {password}\n"
+                f"Database: {db_name}"
+            )
+
+        except Exception as e:
+            error = f"Error creating shop: {str(e)}"
 
     return render(
         request,
         "master/add_shop.html",
-        {"plans": plans, "message": message}
+        {
+            "plans": plans,
+            "message": message,
+            "error": error
+        }
     )
