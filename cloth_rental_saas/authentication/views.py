@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .models import LoginAttempt, LoginLog
-from notifications.email_service import send_login_alert
+from notifications.email_service import login_alert
 
 
 def login_view(request):
@@ -48,7 +48,7 @@ def login_view(request):
                 status="SUCCESS"
             )
 
-            send_login_alert(user.email, "SUCCESSFUL LOGIN")
+            login_alert(user.email, "SUCCESSFUL LOGIN")
 
             return redirect("dashboard")
 
@@ -66,10 +66,10 @@ def login_view(request):
         )
 
         if attempt.is_locked:
-            send_login_alert(user_obj.email, "ACCOUNT LOCKED")
+            login_alert(user_obj.email, "ACCOUNT LOCKED")
             message = "Account locked after 3 failed login attempts"
         else:
-            send_login_alert(user_obj.email, "FAILED LOGIN ATTEMPT")
+            login_alert(user_obj.email, "FAILED LOGIN ATTEMPT")
             message = "Invalid username or password"
 
     return render(request, "auth/login.html", {"message": message})
