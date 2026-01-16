@@ -1,45 +1,38 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-</head>
-<body class="bg-light">
+{% extends "layout/base.html" %}
+{% block title %}Login{% endblock %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="card shadow">
-                <div class="card-header text-center">
-                    <h4>Shop Login</h4>
-                </div>
-                <div class="card-body">
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white">
+                <h4>Shop Login</h4>
+            </div>
+            <div class="card-body">
 
-                    {% if message %}
-                        <div class="alert alert-danger">{{ message }}</div>
-                    {% endif %}
+                {% if message %}
+                    <div class="alert alert-warning text-center">
+                        {{ message }}
+                    </div>
+                {% endif %}
 
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label>Username</label>
-                            <input type="text" name="username" class="form-control" required>
-                        </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
 
-                        <div class="mb-3">
-                            <label>Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
+                    <div class="mb-3">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
 
-                        <button class="btn btn-primary w-100">Login</button>
-                    </form>
+                    <button class="btn btn-primary w-100">Login</button>
+                </form>
 
-                </div>
             </div>
         </div>
     </div>
 </div>
-
-</body>
-</html>
+{% endblock %}
