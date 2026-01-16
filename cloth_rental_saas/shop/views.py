@@ -40,3 +40,41 @@ def rent_cloth(request):
         message = "Cloth rented successfully"
 
     return render(request, "shop/rent.html", {"message": message})
+
+@login_required
+def return_cloth(request):
+    message = None
+
+    if request.method == "POST":
+        cloth_code = request.POST.get("cloth_code")
+
+        try:
+            rental = Rental.objects.using("shop_1").get(
+                cloth__cloth_code=cloth_code,
+                status="RENTED"
+            )
+        except Rental.DoesNotExist:
+            message = "Active rental not found for this cloth"
+            return render(request, "shop/return.html", {"message": message})
+
+        today = date.today()
+        rental.actual_return_date = today
+
+        # Fine calculation
+        if today > rental.expected_return_date:
+            days_late = (today - rental.expected_return_date).days
+            rental.fine_amount = days_late * 50
+            rental.status = "OVERDUE"
+        else:
+            rental.fine_amount = 0
+            rental.status = "RETURNED"
+
+        rental.save(using="shop_1")
+
+        cloth = rental.cloth
+        cloth.is_available = True
+        cloth.save(using="shop_1")
+
+        message = f"Cloth returned successfully. Fine: ₹{rental.fine_amount}"
+
+    return render(request, "shop/return.html", {"message": message})

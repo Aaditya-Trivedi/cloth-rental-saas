@@ -1,0 +1,21 @@
+{% extends "layout/base.html" %}
+{% block title %}Return Cloth{% endblock %}
+
+{% block content %}
+<h4>Return Cloth</h4>
+
+{% if message %}
+<div class="alert alert-info">{{ message }}</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label>Cloth Code (Barcode)</label>
+        <input type="text" name="cloth_code" class="form-control" required>
+    </div>
+
+    <button class="btn btn-warning">Return</button>
+</form>
+{% endblock %}
