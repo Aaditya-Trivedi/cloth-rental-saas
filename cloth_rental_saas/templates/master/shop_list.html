@@ -18,7 +18,7 @@
         {% endif %}
     </td>
     <td>
-        <form method="post" action="{% url 'toggle_shop' shop.id %}" style="display:inline;">
+        <form method="post" action="{% url 'toggle_shop' s.id %}" style="display:inline;">
             {% csrf_token %}
             <button class="btn btn-sm btn-warning">Toggle</button>
         </form>
