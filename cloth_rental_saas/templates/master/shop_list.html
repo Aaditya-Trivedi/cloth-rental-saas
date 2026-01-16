@@ -18,9 +18,10 @@
         {% endif %}
     </td>
     <td>
-        <a href="{% url 'toggle_shop' s.id %}" class="btn btn-sm btn-warning">
-            Toggle
-        </a>
+        <form method="post" action="{% url 'toggle_shop' shop.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-warning">Toggle</button>
+        </form>
     </td>
 </tr>
 {% endfor %}

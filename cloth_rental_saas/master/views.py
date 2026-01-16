@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
+from django.views.decorators.http import require_POST
+
 from .models import ShopRegistry, Subscription
 
 def is_superadmin(user):
@@ -32,6 +34,7 @@ def shop_list(request):
     return render(request, "master/shop_list.html", {"shops": shops})
 
 
+@require_POST
 @user_passes_test(is_superadmin)
 def toggle_shop(request, shop_id):
     shop = ShopRegistry.objects.get(id=shop_id)
