@@ -5,21 +5,33 @@
     <title>{% block title %}Cloth Rental System{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
 </head>
-<body class="bg-light">
-
-<nav class="navbar navbar-dark bg-dark">
+<body>
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
     <div class="container">
         <span class="navbar-brand">Cloth Rental System</span>
         {% if user.is_authenticated %}
+            <span class="text-white">Logged in as: {{ request.user.username }}</span>
             <a href="{% url 'logout' %}" class="btn btn-sm btn-danger">Logout</a>
         {% endif %}
     </div>
 </nav>
 
-<div class="container mt-4">
-    {% block content %}{% endblock %}
-</div>
 
-<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- Sidebar -->
+      <div class="col-md-2 bg-light vh-100 p-0">
+        {% block sidebar %}{% endblock %}
+      </div>
+
+      <!-- Main Content -->
+      <div class="col-md-10 p-4">
+        {% block content %}{% endblock %}
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

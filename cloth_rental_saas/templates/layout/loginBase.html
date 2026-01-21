@@ -1,10 +1,27 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>{% block title %}Cloth Rental System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
 </head>
-<body>
-$END$
+<body class="bg-light">
+
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">Cloth Rental System</span>
+        {% if user.is_authenticated %}
+            <span class="text-white">Logged in as: {{ request.user.username }}</span>
+            <a href="{% url 'logout' %}" class="btn btn-sm btn-danger">Logout</a>
+        {% endif %}
+    </div>
+</nav>
+
+
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
